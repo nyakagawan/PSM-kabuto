@@ -44,6 +44,10 @@
     <Compile Include="Support.cs" />
     <Compile Include="PlayerInput.cs" />
     <Compile Include="EntityCollider.cs" />
+    <Compile Include="EnemySpawner.cs" />
+    <Compile Include="EnemyTurtle.cs" />
+    <Compile Include="SpriteBatch.cs" />
+    <Compile Include="Logger.cs" />
   </ItemGroup>
   <ItemGroup>
     <ShaderProgram Include="shaders\Simple.fcg" />
@@ -59,6 +63,7 @@
   <Import Project="$(MSBuildExtensionsPath)\Sce\Sce.Psm.CSharp.targets" />
   <ItemGroup>
     <Folder Include="assets\" />
+    <Folder Include="kabuto\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\Background.png" />

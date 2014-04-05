@@ -217,12 +217,12 @@ namespace kabuto
 #else
 		public void TitleMode()
 		{
-			Support.MusicSystem.Instance.Play("game_title_screen.mp3");
+//			Support.MusicSystem.Instance.Play("game_title_screen.mp3");
 		}
 		
 		public void GameMode()
 		{
-			Support.MusicSystem.Instance.Stop("game_title_screen.mp3");
+//			Support.MusicSystem.Instance.Stop("game_title_screen.mp3");
 		}
 #endif
 	}

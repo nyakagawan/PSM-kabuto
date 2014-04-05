@@ -42,16 +42,16 @@ namespace kabuto
 		public Sce.PlayStation.HighLevel.GameEngine2D.SpriteTile LightShafts { get; set; }
 		public Sce.PlayStation.HighLevel.GameEngine2D.ActionBase EnemySpawnerLoop { get; set; }
 		
-//		public SpriteBatch SpriteBatch;
+		public SpriteBatch SpriteBatch;
 
         public Game()
         {
-			//Director.Instance.DebugFlags |= DebugFlags.Navigate; // press left alt + mouse to navigate in 2d space
-			//Director.Instance.DebugFlags |= DebugFlags.DrawGrid;
-			//Director.Instance.DebugFlags |= DebugFlags.DrawContentWorldBounds;
-			//Director.Instance.DebugFlags |= DebugFlags.DrawContentLocalBounds;
-			//Director.Instance.DebugFlags |= DebugFlags.DrawTransform;
-			//Director.Instance.DebugFlags |= DebugFlags.Log;
+//			Director.Instance.DebugFlags |= DebugFlags.Navigate; // press left alt + mouse to navigate in 2d space
+//			Director.Instance.DebugFlags |= DebugFlags.DrawGrid;
+//			Director.Instance.DebugFlags |= DebugFlags.DrawContentWorldBounds;
+//			Director.Instance.DebugFlags |= DebugFlags.DrawContentLocalBounds;
+//			Director.Instance.DebugFlags |= DebugFlags.DrawTransform;
+//			Director.Instance.DebugFlags |= DebugFlags.Log;
 
             Scene = new Sce.PlayStation.HighLevel.GameEngine2D.Scene();
             Background = new Layer();
@@ -62,13 +62,13 @@ namespace kabuto
             Interface = new Layer();
             Random = new Random();
             Collider = new EntityCollider();
-//            ParticleEffects = new Support.ParticleEffectsManager();
-//            TextureTileMaps = new Support.TextureTileMapManager();
+            ParticleEffects = new Support.ParticleEffectsManager();
+            TextureTileMaps = new Support.TextureTileMapManager();
             UI = new UI();
 
-//			SpriteBatch = new SpriteBatch();
+			SpriteBatch = new SpriteBatch();
 
-//			BuildTextureTileMaps();
+			BuildTextureTileMaps();
             
 			AddQueue = new List<GameEntity>();
 			RemoveQueue = new List<GameEntity>();
@@ -84,6 +84,7 @@ namespace kabuto
 			
 			// temporary: munge viewport to match vita + assets
 			Vector2 ideal_screen_size = new Vector2(960.0f, 544.0f);
+//			Vector2 ideal_screen_size = new Vector2(800.0f, 480.0f);
 			Camera2D camera = Scene.Camera as Camera2D;
 			camera.SetViewFromHeightAndCenter(ideal_screen_size.Y, ideal_screen_size / 2.0f);
 			TitleCameraCenter = camera.Center;
@@ -106,15 +107,6 @@ namespace kabuto
             Background.AddChild(bg_forest);
             Foreground.AddChild(fg_log);
 			
-            var curtain_left = Support.SpriteFromFile("/Application/assets/curtain.png");
-            var curtain_right = Support.SpriteFromFile("/Application/assets/curtain.png");
-            
-			curtain_left.Position = new Vector2(-200.0f, 0.0f);
-			curtain_right.Position = new Vector2(1280.0f - 380.0f, 0.0f);
-			curtain_right.FlipU = true;
-			Curtains.AddChild(curtain_left);
-			Curtains.AddChild(curtain_right);
-			
 			UI.TitleMode();
 			
 			Sce.PlayStation.HighLevel.GameEngine2D.Scheduler.Instance.Schedule(Scene, TickTitle, 0.0f, false);
@@ -132,7 +124,7 @@ namespace kabuto
 			{
 	            Player = new Player();
 	            World.AddChild(Player);
-//				World.AddChild(SpriteBatch);
+				World.AddChild(SpriteBatch);
 	            
 	            // proper enemies
 	            /*
@@ -163,7 +155,7 @@ namespace kabuto
 				Sce.PlayStation.HighLevel.GameEngine2D.Scheduler.Instance.Unschedule(Scene, this.TickTitle);
 				Sce.PlayStation.HighLevel.GameEngine2D.Scheduler.Instance.Schedule(Scene, this.TickGame, 0.0f, false);
 
-				Support.SoundSystem.Instance.Play("game_press_start.wav");
+//				Support.SoundSystem.Instance.Play("game_press_start.wav");
 
 				UI.GameMode();
 
@@ -234,6 +226,24 @@ namespace kabuto
 			
 			EnemySpawnerLoop = new RepeatForever() { InnerAction = waves };
 			World.RunAction(EnemySpawnerLoop);
+#else
+			//こうもりを出したい
+			var type = 0;
+			var spawn_rate = 0;
+			var total = 1;
+			var spawner = new EnemySpawner() {
+				SpawnCounter = 0,
+				SpawnRate = spawn_rate,
+				Type = type,
+				Total = total,
+//				Position = new Vector2(-300.0f + Game.Instance.Random.NextFloat() * 1500.0f, 600.0f),
+//				Position = new Vector2(200, 250),
+				Position = new Vector2(50,50),
+			};
+			Logger.Debug("swapned");
+			
+			World.AddChild(spawner);
+			Logger.Debug("added child");
 #endif
 		}
 
@@ -250,12 +260,12 @@ namespace kabuto
 
 		public void BuildTextureTileMaps()
 		{
+			TextureTileMaps.Add("EnemyBat", Support.TiledSpriteFromFile("/Application/assets/bat_frames.png", 2, 2).TextureInfo.Texture, 2, 2);
 #if false
 			TextureTileMaps.Add("Player", Support.TiledSpriteFromFile("/Application/assets/sir_awesome_frames.png", 4, 4).TextureInfo.Texture, 4, 4);
 			TextureTileMaps.Add("EnemySlime", Support.TiledSpriteFromFile("/Application/assets/slime_green_frames.png", 4, 4).TextureInfo.Texture, 4, 4);
 			TextureTileMaps.Add("EnemyRedSlime", Support.TiledSpriteFromFile("/Application/assets/slime_red_frames.png", 4, 6).TextureInfo.Texture, 4, 6);
 			TextureTileMaps.Add("EnemyZombie", Support.TiledSpriteFromFile("/Application/assets/zombie_frames.png", 4, 2).TextureInfo.Texture, 4, 2);
-			TextureTileMaps.Add("EnemyBat", Support.TiledSpriteFromFile("/Application/assets/bat_frames.png", 2, 2).TextureInfo.Texture, 2, 2);
 
 			for (int i = 0; i < 32; ++i)
 			{
@@ -274,9 +284,7 @@ namespace kabuto
 		// NOTE: no delta time, frame specific
 		public void FrameUpdate()
 		{
-#if false
 			Collider.Collide();
-			
 			foreach (GameEntity e in RemoveQueue)
 				World.RemoveChild(e,true);
 			foreach (GameEntity e in AddQueue)
@@ -285,6 +293,7 @@ namespace kabuto
 			RemoveQueue.Clear();
 			AddQueue.Clear();
 			
+#if false
 			// is player dead?
 			if (PlayerDead)
 			{
@@ -309,11 +318,11 @@ namespace kabuto
 		
 		public void DrawWorld()
 		{
-			// debug
-			//Director.Instance.GL.ModelMatrix.Push();
-			//Director.Instance.GL.ModelMatrix.SetIdentity();
-			//Director.Instance.DrawHelpers.DrawCircle(TitleCameraCenter, 30.0f, 32);
-			//Director.Instance.GL.ModelMatrix.Pop();
+//			// debug
+//			Director.Instance.GL.ModelMatrix.Push();
+//			Director.Instance.GL.ModelMatrix.SetIdentity();
+//			Director.Instance.DrawHelpers.DrawCircle(TitleCameraCenter, 30.0f, 32);
+//			Director.Instance.GL.ModelMatrix.Pop();
 		}
 		
 		public void PlayerDied()

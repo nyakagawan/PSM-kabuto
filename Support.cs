@@ -58,7 +58,6 @@ namespace kabuto
             return result;
         }
       
-#if false
         public static Sce.PlayStation.HighLevel.GameEngine2D.SpriteTile UnicolorSprite(string name, byte r, byte g, byte b, byte a)
         {
         	uint color = (uint)(a << 24 | b << 16 | g << 8 | r);
@@ -154,11 +153,8 @@ namespace kabuto
 		{
             return sprite.TileIndex1D;
 		}
-#endif
 		
-#if false
-		public class AnimationAction
-			: Sce.PlayStation.HighLevel.GameEngine2D.ActionBase
+		public class AnimationAction : Sce.PlayStation.HighLevel.GameEngine2D.ActionBase
 		{
 			int animation_start;
 			int animation_end;
@@ -231,7 +227,6 @@ namespace kabuto
 				SetTile(attached_sprite, animation_start);
 			}
 		}
-#endif
 		
 		public class SoundSystem
 		{
@@ -334,7 +329,6 @@ namespace kabuto
 			}
 		}
 		
-#if false
 		public class AdjustableDelayAction
 			: Sce.PlayStation.HighLevel.GameEngine2D.DelayTime
 		{
@@ -351,233 +345,9 @@ namespace kabuto
 			}
 		}
 		
-		public class ParticleEffectsManager
-			: Sce.PlayStation.HighLevel.GameEngine2D.Node
-		{
-			public class Particle
-			{
-				public Vector2 position;
-				public Vector2 velocity;
-				public Vector2 friction;
-				public Vector4 color;
-				public float time;
-				public float lifetime;
-				public Vector2 size;
-				public Vector2 size_delta;
-				public float gravity;
-			};
-			
-			public struct VertexData
-			{
-				public Vector2 position;
-				public Vector2 uv;
-				public Vector4 color;
-			};
-			
-			public List<Particle> Particles;
-			public int ActiveParticles;
-			public VertexBuffer VertexBuffer;
-			public VertexData[] VertexDataArray;
-			public ushort[] IndexDataArray;
-			public ShaderProgram ShaderProgram;
-			public Texture2D ParticleDotTexture;
-			
-            ImmediateModeQuads< VertexData > imm_quads;
-            int max_particles { get { return 768; } }
 
-			public ParticleEffectsManager()
-			{
-				Particles = new List<Particle>();
-				for (int i = 0; i < max_particles; ++i)
-					Particles.Add(new Particle());
-					
-				ShaderProgram = new ShaderProgram("/Application/assets/pfx.cgx");
-				ParticleDotTexture = new Texture2D("/Application/assets/particle_dot.png", false);
-				Sce.PlayStation.HighLevel.GameEngine2D.Scheduler.Instance.Schedule(this, Tick, 0.0f, false);
-				
-				AdHocDraw += this.DrawParticles;
+		public class ParticleEffectsManager : Sce.PlayStation.HighLevel.GameEngine2D.Node {}
 
-                imm_quads = new ImmediateModeQuads< VertexData >( Director.Instance.GL, (uint)max_particles, VertexFormat.Float2, VertexFormat.Float2, VertexFormat.Float4 );
-			}
-			
-			public void Tick(float dt)
-			{
-				float fullness = (float)ActiveParticles / (float)Particles.Count;
-				float life_speed = fullness;
-				
-				dt = 1.0f / 60.0f;
-				
-				for (int i = 0; i < ActiveParticles; ++i)
-				{
-					Particle p = Particles[i];
-					p.position += p.velocity;
-					p.velocity += new Vector2(0.0f, p.gravity * -0.5f);
-					p.velocity *= p.friction;
-					p.time += dt;
-					p.time += dt * fullness;
-					p.size += p.size_delta;
-					
-					if (p.position.Y < Game.Instance.FloorHeight)
-					{
-						p.velocity.Y *= -0.5f;
-						p.velocity.X *= 0.75f;
-						p.position += p.velocity;
-					}
-				}
-				
-				for (int i = 0; i < ActiveParticles; ++i)
-				{
-					Particle p = Particles[i];
-					if (p.time < p.lifetime)
-						continue;
-						
-					Particles[i] = Particles[ActiveParticles - 1];
-					Particles[ActiveParticles - 1] = p;
-					ActiveParticles--;
-					i--;
-				}	
-			}
-			
-			public void DrawParticles()
-			{
-				Director.Instance.GL.ModelMatrix.Push();
-				Director.Instance.GL.ModelMatrix.SetIdentity();
-				
-				Matrix4 transform = Director.Instance.GL.GetMVP();
-				ShaderProgram.SetUniformValue(ShaderProgram.FindUniform("MVP"), ref transform);
-				
-				ShaderProgram.SetAttributeBinding(0, "iPosition");
-				ShaderProgram.SetAttributeBinding(1, "iUV");
-				ShaderProgram.SetAttributeBinding(2, "iColor");
-				
-				Director.Instance.GL.Context.SetShaderProgram(ShaderProgram);
-
-				Director.Instance.GL.Context.SetTexture(0, ParticleDotTexture);
-
-				Common.Assert( ActiveParticles <= imm_quads.MaxQuads );
-
-				imm_quads.ImmBeginQuads( (uint)ActiveParticles );
-
-				for (int i = 0; i < ActiveParticles; ++i)
-				{
-					Particle p = Particles[i];
-
-					imm_quads.ImmAddQuad( 
-						new VertexData() { position = p.position + new Vector2(0, 0), uv = new Vector2(0, 0), color = p.color},
-						new VertexData() { position = p.position + new Vector2(p.size.X, 0), uv = new Vector2(1, 0), color = p.color},
-						new VertexData() { position = p.position + new Vector2(0, p.size.Y), uv = new Vector2(0, 1), color = p.color},
-						new VertexData() { position = p.position + new Vector2(p.size.X, p.size.Y), uv = new Vector2(1, 1), color = p.color} );
-				}
-
-				imm_quads.ImmEndQuads();
-				
-				Director.Instance.GL.Context.SetShaderProgram(null);
-				Director.Instance.GL.Context.SetVertexBuffer(0, null);
-				
-				Director.Instance.GL.ModelMatrix.Pop();
-			}
-			
-			public void AddParticlesBurst(int count, Vector2 position, Vector2 velocity, Vector4 color, float jitter = 0.0f, float scale_multiplier = 1.0f)
-			{
-				for (int i = 0; i < count; ++i)
-				{
-					Vector2 p = position + Game.Instance.Random.NextVector2() * jitter;
-					Vector2 v = velocity + Game.Instance.Random.NextVector2() * jitter;
-					AddParticle(p, v, color, scale_multiplier);
-				}
-			}
-			
-			public void AddParticlesBurstRandomy(int count, Vector2 position, Vector2 velocity, Vector4 color, float jitter = 0.0f, float scale_multiplier = 1.0f)
-			{
-				for (int i = 0; i < count; ++i)
-				{
-					Vector2 p = position + Game.Instance.Random.NextVector2() * jitter * (1.0f + Game.Instance.Random.NextFloat() * 0.5f);
-					Vector2 v = velocity + Game.Instance.Random.NextVector2() * jitter * (1.0f + Game.Instance.Random.NextFloat() * 0.5f);
-					AddParticle(p, v, color, scale_multiplier);
-				}
-			}
-			
-			public void AddParticlesCone(int count, Vector2 position, Vector2 velocity, Vector4 color, float spread, float scale_multiplier = 1.0f)
-			{
-				for (int i = 0; i < count; ++i)
-				{
-					Vector2 p = position + (velocity * (float)Game.Instance.Random.NextDouble());
-					Vector2 v = velocity + velocity.Rotate((float)Game.Instance.Random.NextDouble() * spread);
-					AddParticle(p, v, color, scale_multiplier);
-				}
-			}
-			
-			public void AddParticlesTile(string name, int tile_index, bool flip_u, Vector2 position, Vector2 velocity, float jitter = 0.0f, float scale_multiplier = 1.0f)
-			{
-				TextureTileMapManager.Entry entry = Game.Instance.TextureTileMaps.TileData[name];
-				List<byte> tile_data = entry.Data[tile_index];
-				Vector2 world_spacing = new Vector2(
-					(float)Support.TextureTileMapManager.ScaleDivisor * 1.0f,
-					(float)Support.TextureTileMapManager.ScaleDivisor * 1.0f
-				);
-				
-				// debug
-				// jitter = 0.0f;
-				
-				Vector2 topleft = new Vector2(entry.TileWidth, entry.TileHeight);
-				topleft *= world_spacing;
-				topleft *= -0.5f;
-				
-				for (int y = 0; y < entry.TileHeight; y++)
-				{
-					for (int x = 0; x < entry.TileWidth; x++)
-					{
-						int index = y * entry.TileWidth + x;
-						byte r = tile_data[index * 4 + 0];
-						byte g = tile_data[index * 4 + 1];
-						byte b = tile_data[index * 4 + 2];
-						byte a = tile_data[index * 4 + 3];
-						
-						if (a > 128)
-						{
-							int row = index / entry.TileWidth;
-							int col = index % entry.TileWidth;
-							
-							if (flip_u)
-								col = entry.TileWidth - col;
-							
-							Vector2 ofs = new Vector2(col, row) * world_spacing;
-							Vector2 p = position + topleft + ofs + Game.Instance.Random.NextVector2() * jitter;
-							Vector2 v = velocity + Game.Instance.Random.NextVector2() * jitter * 0.5f;
-							Vector4 color = new Vector4(
-								r / 255.0f,
-								g / 255.0f,
-								b / 255.0f,
-								1.0f
-							);
-							
-							AddParticle(p, v, color, scale_multiplier);
-						}
-					}
-				}
-			}
-			
-			public void AddParticle(Vector2 position, Vector2 velocity, Vector4 color, float scale_multiplier)
-			{
-				if (ActiveParticles >= Particles.Count)
-				{
-					return;
-				}
-				
-				Particle p = Particles[ActiveParticles];
-				p.position = position;
-				p.velocity = velocity;
-				p.friction = Vector2.One;
-				p.color = color;
-				p.time = 0.0f;
-				p.lifetime = 1.5f;
-				p.size = Vector2.One * 12.0f * scale_multiplier;
-				p.size_delta = new Vector2(-0.15f);
-				p.gravity = 1.0f;
-				ActiveParticles++;
-			}
-		}
-		
 		public class TextureTileMapManager
 		{
 			public struct VertexData
@@ -792,19 +562,6 @@ namespace kabuto
 			}
 		}
 		
-		public static Vector4 Color(byte r, byte g, byte b, byte a = 255)
-		{
-			return new Sce.PlayStation.Core.Vector4(
-				(float)r / 255.0f,
-				(float)g / 255.0f,
-				(float)b / 255.0f,
-				(float)a / 255.0f
-			);
-		}
-#else
-		public class ParticleEffectsManager : Sce.PlayStation.HighLevel.GameEngine2D.Node {}
-		public class TextureTileMapManager {}
-#endif
 	}
 
 }

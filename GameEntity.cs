@@ -9,8 +9,6 @@ namespace kabuto
 {
 	public class GameEntity : Sce.PlayStation.HighLevel.GameEngine2D.Node
 	{
-#if false
-		public float Health { get; set; }
 		public float InvincibleTime { get; set; }
 		public int FrameCount { get; set; }
 		
@@ -29,7 +27,6 @@ namespace kabuto
 			Sce.PlayStation.HighLevel.GameEngine2D.Scheduler.Instance.Schedule(this, Tick, 0.0f, false);
 			//AdHocDraw += this.DebugDraw;
 			CollisionDatas = new List<EntityCollider.CollisionEntry>();
-			Health = 1.0f;
 		}
 		
 		public void DebugDraw()
@@ -55,7 +52,7 @@ namespace kabuto
 			
 			if (InvincibleTime <= 0.0f)
 			{
-				foreach (EntityCollider.CollisionEntry c in CollisionDatas)
+				foreach(var c in CollisionDatas)
 				{
 					if (c.owner != null)
 						Game.Instance.Collider.Add(c);
@@ -67,43 +64,24 @@ namespace kabuto
 		public virtual void CollideFrom(GameEntity owner, Node collider) { }
 		
 		public void SpawnDamageParticles(Vector2 position, Vector2 source, float damage, Vector4 color)
-		{
-			//if (Health <= 0.0f)
-				//return;
-				
+		{				
 			Vector2 dir = position - source;
 			if (dir.LengthSquared() > 0.0f)
 				dir = dir.Normalize();
 			dir *= 0.25f;
 			int particles = (int)(damage * 4.0f);
 			float jitter = 1.5f * damage;
-			Game.Instance.ParticleEffects.AddParticlesBurst(particles, position, dir * damage * 4.0f + Vector2.UnitY * 2.0f, color, jitter, 1.0f);
-		}
-		
-		public void DropCoinsWithAChanceOfHeart(Vector2 position, int count)
-		{
-			for (int i = 0; i < count; ++i)
-				Coin.Spawn(position);
-				
-			// chance of heart
-			if (Game.Instance.Random.NextFloat() < 0.06f)
-			{
-				var heart = new Heart() { Position = position };
-				Game.Instance.World.AddChild(heart);
-			}
+//			Game.Instance.ParticleEffects.AddParticlesBurst(particles, position, dir * damage * 4.0f + Vector2.UnitY * 2.0f, color, jitter, 1.0f);
 		}
 		
 		public virtual void TakeDamage(float damage, Vector2? source)
 		{
-			Health -= damage;
-			if (Health <= 0.0f)
-				Die(source, damage);
+			Die(source, damage);
 		}
 		
 		public virtual void Die(Vector2? source, float damage)
 		{
 			Game.Instance.World.RemoveChild(this, true);
 		}
-#endif
 	};
 }
