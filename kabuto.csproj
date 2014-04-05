@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{07731D3C-A30A-4CE5-B831-E9B51E38DF17}</ProjectGuid>
+    <ProjectTypeGuids>{69878862-DA7D-4DC6-B0A1-50D8FAB4242F};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>kabuto</RootNamespace>
+    <AssemblyName>kabuto</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Sce.PlayStation.Core" />
+    <Reference Include="Sce.PlayStation.HighLevel.GameEngine2D" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppMain.cs" />
+    <Compile Include="Game.cs" />
+    <Compile Include="GameEntity.cs" />
+    <Compile Include="UI.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="Support.cs" />
+    <Compile Include="PlayerInput.cs" />
+    <Compile Include="EntityCollider.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ShaderProgram Include="shaders\Simple.fcg" />
+    <ShaderProgram Include="shaders\Simple.vcg" />
+    <ShaderProgram Include="assets\offscreen.fcg" />
+    <ShaderProgram Include="assets\offscreen.vcg" />
+    <ShaderProgram Include="assets\pfx.fcg" />
+    <ShaderProgram Include="assets\pfx.vcg" />
+  </ItemGroup>
+  <ItemGroup>
+    <PsmMetadata Include="app.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Sce\Sce.Psm.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="assets\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="assets\Background.png" />
+    <Content Include="assets\background_back.png" />
+    <Content Include="assets\background_front.png" />
+    <Content Include="assets\background_light_shafts.png" />
+    <Content Include="assets\background_test.png" />
+    <Content Include="assets\bat_frames.png" />
+    <Content Include="assets\coins.png" />
+    <Content Include="assets\curtain.png" />
+    <Content Include="assets\dead_sword.png" />
+    <Content Include="assets\glass_frames.png" />
+    <Content Include="assets\item_health.png" />
+    <Content Include="assets\particle_dot.png" />
+    <Content Include="assets\sir_awesome_frames.png" />
+    <Content Include="assets\slime_green_frames.png" />
+    <Content Include="assets\slime_red_frames.png" />
+    <Content Include="assets\sparkle_frames.png" />
+    <Content Include="assets\title.png" />
+    <Content Include="assets\ui_gauge_fill.png" />
+    <Content Include="assets\ui_panels.png" />
+    <Content Include="assets\World.png" />
+    <Content Include="assets\zombie_frames.png" />
+    <Content Include="assets\sounds\bat_die.wav" />
+    <Content Include="assets\sounds\bat_fly.wav" />
+    <Content Include="assets\sounds\bat_take_damage.wav" />
+    <Content Include="assets\sounds\beer_splash.wav" />
+    <Content Include="assets\sounds\beer_throw.wav" />
+    <Content Include="assets\sounds\coin_collect.wav" />
+    <Content Include="assets\sounds\coin_spawn.wav" />
+    <Content Include="assets\sounds\game_game_music.mp3" />
+    <Content Include="assets\sounds\game_game_over.wav" />
+    <Content Include="assets\sounds\game_press_start.wav" />
+    <Content Include="assets\sounds\game_title_screen.mp3" />
+    <Content Include="assets\sounds\green_slime_die.wav" />
+    <Content Include="assets\sounds\green_slime_jump.wav" />
+    <Content Include="assets\sounds\green_slime_take_damage.wav" />
+    <Content Include="assets\sounds\heart_collect.wav" />
+    <Content Include="assets\sounds\player_jump.wav" />
+    <Content Include="assets\sounds\player_land.wav" />
+    <Content Include="assets\sounds\player_sword_attack.wav" />
+    <Content Include="assets\sounds\player_sword_hit_enemy.wav" />
+    <Content Include="assets\sounds\player_take_damage.wav" />
+    <Content Include="assets\sounds\player_walk.wav" />
+    <Content Include="assets\sounds\red_slime_explode.wav" />
+    <Content Include="assets\sounds\red_slime_roll.wav" />
+    <Content Include="assets\sounds\zombie_die.wav" />
+    <Content Include="assets\sounds\zombie_shuffle.wav" />
+    <Content Include="assets\sounds\zombie_take_damage.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\Thumbs.db" />
+    <None Include="assets\fonts\IndieFlower.ttf" />
+    <None Include="assets\fonts\MedievalSharp.ttf" />
+    <None Include="assets\fonts\TheGirlNextDoor.ttf" />
+  </ItemGroup>
+</Project>
