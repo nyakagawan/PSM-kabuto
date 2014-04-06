@@ -38,6 +38,7 @@ namespace kabuto
 		
 		public int WaveCount { get; set; }
 		public bool PlayerDead { get; set; }
+		public Vector2 ScreenSize { get { return new Vector2(960.0f, 544.0f); } }
 		
 		public Sce.PlayStation.HighLevel.GameEngine2D.SpriteTile LightShafts { get; set; }
 		public Sce.PlayStation.HighLevel.GameEngine2D.ActionBase EnemySpawnerLoop { get; set; }
@@ -47,11 +48,11 @@ namespace kabuto
         public Game()
         {
 //			Director.Instance.DebugFlags |= DebugFlags.Navigate; // press left alt + mouse to navigate in 2d space
-//			Director.Instance.DebugFlags |= DebugFlags.DrawGrid;
-//			Director.Instance.DebugFlags |= DebugFlags.DrawContentWorldBounds;
-//			Director.Instance.DebugFlags |= DebugFlags.DrawContentLocalBounds;
-//			Director.Instance.DebugFlags |= DebugFlags.DrawTransform;
-//			Director.Instance.DebugFlags |= DebugFlags.Log;
+			Director.Instance.DebugFlags |= DebugFlags.DrawGrid;
+			Director.Instance.DebugFlags |= DebugFlags.DrawContentWorldBounds;
+			Director.Instance.DebugFlags |= DebugFlags.DrawContentLocalBounds;
+			Director.Instance.DebugFlags |= DebugFlags.DrawTransform;
+			Director.Instance.DebugFlags |= DebugFlags.DrawPivot;
 
             Scene = new Sce.PlayStation.HighLevel.GameEngine2D.Scene();
             Background = new Layer();
@@ -83,8 +84,7 @@ namespace kabuto
 			Scene.Camera.SetViewFromViewport();
 			
 			// temporary: munge viewport to match vita + assets
-			Vector2 ideal_screen_size = new Vector2(960.0f, 544.0f);
-//			Vector2 ideal_screen_size = new Vector2(800.0f, 480.0f);
+			Vector2 ideal_screen_size = ScreenSize;
 			Camera2D camera = Scene.Camera as Camera2D;
 			camera.SetViewFromHeightAndCenter(ideal_screen_size.Y, ideal_screen_size / 2.0f);
 			TitleCameraCenter = camera.Center;

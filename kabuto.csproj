@@ -114,6 +114,7 @@
     <Content Include="assets\sounds\zombie_die.wav" />
     <Content Include="assets\sounds\zombie_shuffle.wav" />
     <Content Include="assets\sounds\zombie_take_damage.wav" />
+    <Content Include="assets\balloon.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\Thumbs.db" />
