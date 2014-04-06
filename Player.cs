@@ -42,7 +42,7 @@ namespace kabuto
 				{ "Walk",	new Support.AnimationAction(BodySprite, 3, 5, SingleFrame * 60, looping: true) },
 			};
 			
-			Position = new Vector2( Game.Instance.ScreenSize.X * 0.5f, 60.0f);
+			Position = new Vector2( Game.Instance.ScreenSize.X * 0.5f, Game.Instance.FloorHeight);
 			Scale *= 2;
 			AttackTime = -1.0f;
 			Health = 5.0f;

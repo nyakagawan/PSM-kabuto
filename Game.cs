@@ -30,7 +30,7 @@ namespace kabuto
 		public List<GameEntity> AddQueue { get; set; }
 		public List<GameEntity> RemoveQueue { get; set; }
 		
-        public float FloorHeight = 80.0f;
+        public float FloorHeight = 60.0f;
         public float WorldScale = 1.0f;
         
 		public Vector2 TitleCameraCenter { get; set; }

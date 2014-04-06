@@ -40,7 +40,7 @@ namespace kabuto
 			
 			Sprite.RunAction(FlyAnimation);
 			this.Scale *= 2;
-			MaximumVelocity = new Vector2( 300, 200 );
+			MaximumVelocity = new Vector2( 300, 300 );
 			MinimumVelocity = new Vector2( 30, 30 );
 			
 //			Logger.Debug("EnemyTurtle Construct end");
@@ -63,24 +63,48 @@ namespace kabuto
 				return;
 				
 			//add gravity
-			Velocity += Vector2.UnitY * -100.0f * dt;
+			Velocity += Vector2.UnitY * -200.0f * dt;
 			
 			//reduce velocity
-//			Velocity *= 0.95f;
+//			Velocity *= 0.99f;
 
 			//clamp velocity
-			Velocity = Vector2.Clamp( Velocity, MaximumVelocity * -1, MaximumVelocity );
-			if( GroundPingPongCount>0 ) {
-				if(Velocity.X>=-MinimumVelocity.X && Velocity.X<=MinimumVelocity.X) {
-					Velocity.X = MinimumVelocity.X * (Velocity.X<0 ? -1 : 1);
-				}
-				if(Velocity.Y>=-MinimumVelocity.Y && Velocity.X<=MinimumVelocity.Y) {
-					Velocity.Y = MinimumVelocity.Y * (Velocity.Y<0 ? -1 : 1);
-				}
-			}
+//			Velocity = Vector2.Clamp( Velocity, MaximumVelocity * -1, MaximumVelocity );
+//			if( GroundPingPongCount>0 ) {
+//				if(Velocity.X>=-MinimumVelocity.X && Velocity.X<=MinimumVelocity.X) {
+//					Velocity.X = MinimumVelocity.X * (Velocity.X<0 ? -1 : 1);
+//				}
+//				if(Velocity.Y>=-MinimumVelocity.Y && Velocity.X<=MinimumVelocity.Y) {
+//					Velocity.Y = MinimumVelocity.Y * (Velocity.Y<0 ? -1 : 1);
+//				}
+//			}
 			
 			Position += Velocity * dt;
-        }
+
+			//ping pong
+			var newPos = Position;
+			float minY = Game.Instance.FloorHeight;
+			if( newPos.Y<minY ) {
+				newPos.Y = minY;
+				Velocity.Y = Velocity.Y<0 ? -Velocity.Y : Velocity.Y;
+				GroundPingPongCount ++ ;
+				//reduce velocity
+				Velocity *= 0.95f;
+			}
+			float leftX = 0;
+			if( newPos.X<leftX ) {//LeftWall
+				newPos.X = leftX;
+				Velocity.X = Velocity.X<0 ? -Velocity.X : Velocity.X;
+				WallPingPongCount ++ ;
+			}
+			float rightX = Game.Instance.ScreenSize.X;
+			if( newPos.X>rightX ) {
+				newPos.X = rightX;
+				Velocity.X = Velocity.X<0 ? Velocity.X : -Velocity.X;
+				WallPingPongCount ++ ;
+			}
+			Position = newPos;
+		}
 		
 		public override void TakeDamage(float damage, Vector2? source)
 		{

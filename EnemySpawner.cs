@@ -41,7 +41,7 @@ namespace kabuto
 		/// </summary>
 		public EnemySpawner() {
 			_SpawnLevelSetting = new List<SpawnLevelSetting> {
-				new SpawnLevelSetting(20, 1.0f, 5),
+				new SpawnLevelSetting(20, 2.0f, 10),
 				new SpawnLevelSetting(20, 2.5f, 20),
 				new SpawnLevelSetting(20, 3.0f, 30),
 				new SpawnLevelSetting( 0, 4.0f, 40),
@@ -49,9 +49,9 @@ namespace kabuto
 			
 			var screenSize = Game.Instance.ScreenSize;
 			_BasePositionList = new List<Vector2>() {
-				new Vector2() { X=200,				Y=200 },
+//				new Vector2() { X=200,				Y=200 },
 //				new Vector2() { X=0,				Y=screenSize.Y+50 },
-//				new Vector2() { X=screenSize.X/2,	Y=screenSize.Y+50 },
+				new Vector2() { X=screenSize.X/2,	Y=screenSize.Y+50 },
 //				new Vector2() { X=screenSize.X,		Y=screenSize.Y+50 },
 			};
 
