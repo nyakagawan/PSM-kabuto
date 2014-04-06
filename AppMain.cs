@@ -76,11 +76,15 @@ namespace kabuto
 
                 //Sce.PlayStation.HighLevel.GameEngine2D.Camera.DrawDefaultGrid(32.0f);
 
+                game.FramePreUpdate();
+				
                 Sce.PlayStation.HighLevel.GameEngine2D.Director.Instance.GL.SetBlendMode(BlendMode.Normal);
                 Sce.PlayStation.HighLevel.GameEngine2D.Director.Instance.Update();
                 Sce.PlayStation.HighLevel.GameEngine2D.Director.Instance.Render();
 				
                 game.FrameUpdate();
+				
+				game.Draw();
                 
             	timer.Stop();
                 long ms = timer.ElapsedMilliseconds;

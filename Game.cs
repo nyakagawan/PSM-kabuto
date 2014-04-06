@@ -44,16 +44,19 @@ namespace kabuto
 		public Sce.PlayStation.HighLevel.GameEngine2D.ActionBase EnemySpawnerLoop { get; set; }
 		
 		public SpriteBatch SpriteBatch;
+		
+		public DebugString DebugString { get; set; }
 
         public Game()
         {
 //			Director.Instance.DebugFlags |= DebugFlags.Navigate; // press left alt + mouse to navigate in 2d space
-			Director.Instance.DebugFlags |= DebugFlags.DrawGrid;
-			Director.Instance.DebugFlags |= DebugFlags.DrawContentWorldBounds;
-			Director.Instance.DebugFlags |= DebugFlags.DrawContentLocalBounds;
-			Director.Instance.DebugFlags |= DebugFlags.DrawTransform;
-			Director.Instance.DebugFlags |= DebugFlags.DrawPivot;
-
+//			Director.Instance.DebugFlags |= DebugFlags.DrawGrid;
+//			Director.Instance.DebugFlags |= DebugFlags.DrawContentWorldBounds;
+//			Director.Instance.DebugFlags |= DebugFlags.DrawContentLocalBounds;
+//			Director.Instance.DebugFlags |= DebugFlags.DrawTransform;
+//			Director.Instance.DebugFlags |= DebugFlags.DrawPivot;
+			
+			DebugString = new DebugString(Sce.PlayStation.HighLevel.GameEngine2D.Director.Instance.GL.Context);
             Scene = new Sce.PlayStation.HighLevel.GameEngine2D.Scene();
             Background = new Layer();
             World = new Layer();
@@ -107,7 +110,13 @@ namespace kabuto
 			Sce.PlayStation.HighLevel.GameEngine2D.Scheduler.Instance.Schedule(Scene, TickTitle, 0.0f, false);
 			
 			World.AdHocDraw += this.DrawWorld;
-        }
+		}
+		
+		public void Draw() {
+			if(DebugString!=null) {
+				DebugString.Render();
+			}
+		}
         
 		public void TickTitle(float dt)
 		{
@@ -274,6 +283,14 @@ namespace kabuto
 			//TextureTileMaps.Add("EnemyZombie", Support.TiledSpriteFromFile("/Application/assets/zombie_frames.png", 4, 2).TextureInfo.Texture, 1, 1);
 			//TextureTileMaps.Add("EnemyBat", Support.TiledSpriteFromFile("/Application/assets/bat_frames.png", 2, 2).TextureInfo.Texture, 1, 1);
 #endif
+		}
+		
+		public void FramePreUpdate()
+		{
+			if(DebugString!=null) {
+				DebugString.Clear();
+				DebugString.WriteLine("test draw");
+			}
 		}
         
 		// NOTE: no delta time, frame specific

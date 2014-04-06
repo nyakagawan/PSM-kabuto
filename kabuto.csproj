@@ -49,6 +49,7 @@
     <Compile Include="SpriteBatch.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="PlayerBullet.cs" />
+    <Compile Include="DebugString.cs" />
   </ItemGroup>
   <ItemGroup>
     <ShaderProgram Include="shaders\Simple.fcg" />
@@ -65,6 +66,7 @@
   <ItemGroup>
     <Folder Include="assets\" />
     <Folder Include="kabuto\" />
+    <Folder Include="resources\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\Background.png" />
@@ -133,5 +135,12 @@
     <None Include="assets\fonts\MedievalSharp.ttf" />
     <None Include="assets\fonts\TheGirlNextDoor.ttf" />
     <None Include="assets\readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="resources\DebugFont.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedShaderProgram Include="shaders\SimpleSprite.fcg" />
+    <EmbeddedShaderProgram Include="shaders\SimpleSprite.vcg" />
   </ItemGroup>
 </Project>
