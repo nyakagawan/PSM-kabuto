@@ -10,8 +10,6 @@ namespace kabuto
 		public Vector2 Velocity = Vector2.Zero;
 		
         public Sce.PlayStation.HighLevel.GameEngine2D.SpriteTile BodySprite { get; set; }
-        public string CurrentAnimation { get; set; }
-        public Dictionary<string, Support.AnimationAction> AnimationTable { get; set; }
         public float Radius { get { return 25.0f; } }
 
 		public PlayerBullet (Vector2 spawnPos)
@@ -29,12 +27,9 @@ namespace kabuto
 			});
 			
 			const float SingleFrame = 1.0f / 60.0f;
-			AnimationTable = new Dictionary<string, Support.AnimationAction>() {
-				{ "Idle", new Support.AnimationAction(BodySprite, 0, 3, SingleFrame * 30, looping: true) },
-				{ "Explosion", new Support.AnimationAction(BodySprite, 4, 7, SingleFrame * 30, finishCallback:ExplosionAnimFinishCallback) },
-			};
-			
-			SetAnimation("Idle");
+			AddAnimation("Idle", new Support.AnimationAction(BodySprite, 0, 3, SingleFrame * 30, looping: true));
+			AddAnimation("Explosion", new Support.AnimationAction(BodySprite, 4, 6, SingleFrame * 20, finishCallback:ExplosionAnimFinishCallback));
+			SetAnimation(BodySprite, "Idle");
 			
 			Position = spawnPos;
 			Scale *= 2.0f;
@@ -52,7 +47,7 @@ namespace kabuto
 				Logger.Debug("[PlayerBullet] Collied to Enemy");
 				CollisionDatas.RemoveAll( (x) => x.owner==this );
 				Velocity *= 0.3f;
-				SetAnimation("Explosion");
+				SetAnimation(BodySprite, "Explosion");
 			}
 		}
 		
@@ -71,17 +66,6 @@ namespace kabuto
 				Game.Instance.RemoveQueue.Add( this );
 			}
 		}
-		
-		public void SetAnimation(string animation)
-		{
-			if (CurrentAnimation != null)
-				BodySprite.StopAction(AnimationTable[CurrentAnimation]);
-				
-			CurrentAnimation = animation;
-			BodySprite.RunAction(AnimationTable[animation]);
-			AnimationTable[animation].Reset();
-		}
-		
 	}
 }
 

@@ -1,6 +1,6 @@
 using Sce.PlayStation.Core;
-
 using Sce.PlayStation.HighLevel.GameEngine2D;
+using System;
 
 namespace kabuto
 {
@@ -10,7 +10,6 @@ namespace kabuto
 	public class EnemyTurtle : EnemyBase
     {
         public Sce.PlayStation.HighLevel.GameEngine2D.SpriteTile Sprite { get; set; }
-        public Support.AnimationAction FlyAnimation { get; set; }
 		
 		public Vector2 Velocity = Vector2.Zero;
 		public Vector2 MaximumVelocity = Vector2.Zero;
@@ -27,8 +26,8 @@ namespace kabuto
 			AddChild(Sprite);
             
 			const float SingleFrame = 1.0f / 60.0f;
-			FlyAnimation = new Support.AnimationAction(Sprite, 9, 11, SingleFrame * 30, looping: true);
-//			FlyAnimation = new Support.AnimationAction(Sprite, 0, 4, 0.3f, looping: true);
+			AddAnimation("Fly",	new Support.AnimationAction(Sprite, 9, 11, SingleFrame * 30, looping: true));
+			SetAnimation(Sprite, "Fly");
             
             CollisionDatas.Add(new EntityCollider.CollisionEntry() {
 	            type = EntityCollider.CollisionEntityType.Enemy,
@@ -38,7 +37,6 @@ namespace kabuto
 				radius = () => 20.0f,
 			});
 			
-			Sprite.RunAction(FlyAnimation);
 			this.Scale *= 2;
 			MaximumVelocity = new Vector2( 300, 300 );
 			MinimumVelocity = new Vector2( 30, 30 );
@@ -105,16 +103,35 @@ namespace kabuto
 			}
 			Position = newPos;
 		}
-		
-		public override void TakeDamage(float damage, Vector2? source)
+
+		public override void CollideFrom(GameEntity owner, Node collider)
 		{
-			base.TakeDamage(damage, source);
-//			SpawnDamageParticles(GetCollisionCenter(Sprite), (Vector2)source, damage, Support.Color(108, 71, 22));
-//			MoveTime = 0.0f;
-//			MoveDelay = 2.0f;
-//			Sprite.StopAllActions();
-//			Sprite.RunAction(FlyAnimation);
-//			Support.SoundSystem.Instance.Play("bat_take_damage.wav");
+			base.CollideFrom(owner, collider);
+			
+			Type type = owner.GetType();
+			if (type == typeof(PlayerBullet))
+			{
+				Logger.Debug("[PlayerBullet] Collied from PlayerBullet");
+				CollisionDatas.RemoveAll( (x) => x.owner==this );
+				Velocity *= 0.0f;
+				
+				//spawn pieces
+				{
+					int pieceCount = 3;
+					for(int i=0; i<pieceCount; i++) {
+						var pos = Position;
+						var targetPos = pos + Game.Instance.Random.NextVector2( 50 );
+						var enemyPiece = new EnemyPiece(
+							pos,
+							targetPos,
+							1.0f
+						);
+						Game.Instance.AddQueue.Add(enemyPiece);
+					}
+				}
+				
+				Game.Instance.RemoveQueue.Add(this);
+			}
 		}
 		
 		public override void Die(Vector2? source, float damage)

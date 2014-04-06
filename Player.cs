@@ -21,8 +21,6 @@ namespace kabuto
 		public float Redius { get { return 32.0f; } }
 
         public Sce.PlayStation.HighLevel.GameEngine2D.SpriteTile BodySprite { get; set; }
-        public string CurrentAnimation { get; set; }
-        public Dictionary<string, Support.AnimationAction> AnimationTable { get; set; }
 		
         public Player()
         {
@@ -38,17 +36,14 @@ namespace kabuto
 			});
 			
 			const float SingleFrame = 1.0f / 60.0f;
-			AnimationTable = new Dictionary<string, Support.AnimationAction>() {
-				{ "Idle",	new Support.AnimationAction(BodySprite, 9, 11, SingleFrame * 30, looping: true) },
-				{ "Walk",	new Support.AnimationAction(BodySprite, 3, 5, SingleFrame * 60, looping: true) },
-			};
+			AddAnimation("Idle",	new Support.AnimationAction(BodySprite, 9, 11, SingleFrame * 30, looping: true));
+			AddAnimation("Walk",	new Support.AnimationAction(BodySprite, 3, 5, SingleFrame * 60, looping: true));
+			SetAnimation(BodySprite, "Idle");
 			
 			Position = new Vector2( Game.Instance.ScreenSize.X * 0.5f, Game.Instance.FloorHeight);
 			Scale *= 2;
 			AttackTime = -1.0f;
 			Health = 5.0f;
-			
-			SetAnimation("Idle");
         }
 		
        	public override void Tick(float dt)
@@ -64,7 +59,7 @@ namespace kabuto
 				if (System.Math.Abs(Velocity.X) > IdleAnimationSpeedThreshold)
 				{
 					if (CurrentAnimation == "Idle") {
-						SetAnimation("Walk");
+						SetAnimation(BodySprite, "Walk");
 						if( Velocity.X<0 ) {
 							BodySprite.FlipU = true;
 						}
@@ -83,7 +78,7 @@ namespace kabuto
 				else
 				{
 					if (CurrentAnimation.StartsWith("Walk")) {
-						SetAnimation("Idle");
+						SetAnimation(BodySprite, "Idle");
 					}
 				}
 				
@@ -129,18 +124,6 @@ namespace kabuto
 			Game.Instance.DebugString.WriteLine("PL Vel: "+Velocity.ToString());
 		}
 		
-		public void SetAnimation(string animation)
-		{
-			if (CurrentAnimation != null)
-				BodySprite.StopAction(AnimationTable[CurrentAnimation]);
-				
-			CurrentAnimation = animation;
-			BodySprite.RunAction(AnimationTable[animation]);
-			AnimationTable[animation].Reset();
-			
-			//Console.WriteLine("SetAnimation(): {0}", animation);
-		}
-		
 		public void StartAttack()
 		{
 			Logger.Debug("StartAttack");
@@ -153,7 +136,6 @@ namespace kabuto
 			//Game.Instance.ParticleEffects.AddParticlesCone(16, GetCollisionCenter(BodySprite), Vector2.UnitY, Colors.White, 1.0f);
 			//DropCoinsWithAChanceOfHeart(GetCollisionCenter(BodySprite) + Vector2.UnitY * 160.0f, 4);
 			
-//			SetAnimation("Attack");
 			AttackTime = 0.125f;
 			
 			var bullet = new PlayerBullet(Position);

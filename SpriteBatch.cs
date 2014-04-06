@@ -11,6 +11,7 @@ namespace kabuto
 	public enum SpriteBatchType : int
 	{
 		Bat = 0,
+		Bomb,
 		Max
 	};
 
@@ -42,8 +43,9 @@ namespace kabuto
 		public SpriteBatch()
 		{
 			//バッチスプライトが増える場合はこいつに追加
-			_TiledSpriteLoadParams.Add( new TiledSpriteLoadParam("/Application/assets/koumori.png", 3, 4) );
 //			_TiledSpriteLoadParams.Add( new TiledSpriteLoadParam("/Application/assets/bat_frames.png", 2, 2) );
+			_TiledSpriteLoadParams.Add( new TiledSpriteLoadParam("/Application/assets/koumori.png", 3, 4) );
+			_TiledSpriteLoadParams.Add( new TiledSpriteLoadParam("/Application/assets/bomb.png", 6, 12) );
 			
 			PrecacheSprites();
 

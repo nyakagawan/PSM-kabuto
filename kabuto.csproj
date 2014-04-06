@@ -50,6 +50,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="PlayerBullet.cs" />
     <Compile Include="DebugString.cs" />
+    <Compile Include="EnemyPiece.cs" />
   </ItemGroup>
   <ItemGroup>
     <ShaderProgram Include="shaders\Simple.fcg" />
@@ -128,6 +129,7 @@
     <Content Include="assets\majo_kage.png" />
     <Content Include="assets\obake.png" />
     <Content Include="assets\obake_kage.png" />
+    <Content Include="assets\bomb.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\Thumbs.db" />

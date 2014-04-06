@@ -12,21 +12,43 @@ namespace kabuto
 		public float InvincibleTime { get; set; }
 		public int FrameCount { get; set; }
 		
+        public string CurrentAnimation { get; set; }
+        public Dictionary<string, Support.AnimationAction> AnimationTable { get; set; }
+		
+		public List<EntityCollider.CollisionEntry> CollisionDatas;
+		
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		public GameEntity()
+		{
+			Sce.PlayStation.HighLevel.GameEngine2D.Scheduler.Instance.Schedule(this, Tick, 0.0f, false);
+			AdHocDraw += this.DebugDraw;
+			CollisionDatas = new List<EntityCollider.CollisionEntry>();
+			AnimationTable = new Dictionary<string, Support.AnimationAction>();
+		}
+		
+		protected void SetAnimation(SpriteTile sprite, string animation)
+		{
+			Common.Assert( AnimationTable.ContainsKey(animation), "animation["+animation+"] does not exists." );
+			if (CurrentAnimation != null)
+				sprite.StopAction(AnimationTable[CurrentAnimation]);
+				
+			CurrentAnimation = animation;
+			sprite.RunAction(AnimationTable[animation]);
+			AnimationTable[animation].Reset();
+		}
+		
+		protected void AddAnimation(string name, Support.AnimationAction animAct ) {
+			AnimationTable.Add( name, animAct );
+		}
+		
 		public static Vector2 GetCollisionCenter(Node node)
 		{
 			Bounds2 bounds = new Bounds2();
 			node.GetlContentLocalBounds(ref bounds);
 			Vector2 center = node.LocalToWorld(bounds.Center);
 			return center;
-		}
-		
-		public List<EntityCollider.CollisionEntry> CollisionDatas;
-		
-		public GameEntity()
-		{
-			Sce.PlayStation.HighLevel.GameEngine2D.Scheduler.Instance.Schedule(this, Tick, 0.0f, false);
-			AdHocDraw += this.DebugDraw;
-			CollisionDatas = new List<EntityCollider.CollisionEntry>();
 		}
 		
 		public virtual void DebugDraw()
