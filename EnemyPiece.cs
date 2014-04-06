@@ -35,7 +35,7 @@ namespace kabuto
 			AddAnimation("Idle", new Support.AnimationAction(Sprite, 0, 6, LifeTime, looping: false));
 			SetAnimation(Sprite, "Idle");
 			
-			Logger.Debug("[EnemyPiece] pos:{0}, target:{1}", Position.ToString(), TargetPosition.ToString());
+//			Logger.Debug("[EnemyPiece] pos:{0}, target:{1}", Position.ToString(), TargetPosition.ToString());
 		
 			var mv = new MoveTo(TargetPosition, LifeTime);
 			MoveToAction = mv;

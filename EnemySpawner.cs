@@ -115,7 +115,7 @@ namespace kabuto
         {
 			Vector2 pos = ChooseSpawnBasePos();
 			Vector2 initVelocity = new Vector2( 200 * Game.Instance.Random.NextSignedFloat(), 0 );
-			Logger.Debug("[SpawnEnemy] pos:{0}, vel:{1}", pos.ToString(), initVelocity.ToString());
+//			Logger.Debug("[SpawnEnemy] pos:{0}, vel:{1}", pos.ToString(), initVelocity.ToString());
 			
 			EnemyBase enemy = null;
         	switch (Type)
