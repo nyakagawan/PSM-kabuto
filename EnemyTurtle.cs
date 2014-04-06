@@ -4,122 +4,82 @@ using Sce.PlayStation.HighLevel.GameEngine2D;
 
 namespace kabuto
 {
-	public class EnemyTurtle : GameEntity
+	public class EnemyBase : GameEntity {
+	}
+	
+	public class EnemyTurtle : EnemyBase
     {
         public Sce.PlayStation.HighLevel.GameEngine2D.SpriteTile Sprite { get; set; }
         public Support.AnimationAction FlyAnimation { get; set; }
+		
+		public Vector2 Velocity = Vector2.Zero;
+		public Vector2 MaximumVelocity = Vector2.Zero;
+		public Vector2 MinimumVelocity = Vector2.Zero;
+		Vector2 Direction = Vector2.One;
+		int GroundPingPongCount { get; set; }
+		int WallPingPongCount { get; set; }
         
         public EnemyTurtle()
         {
-			Logger.Debug("EnemyTurtle Construct begin");
-            Sprite = Support.TiledSpriteFromFile("/Application/assets/bat_frames.png", 2, 2);
+//			Logger.Debug("EnemyTurtle Construct begin");
+            Sprite = Support.TiledSpriteFromFile("/Application/assets/koumori.png", 3, 4);
+//            Sprite = Support.TiledSpriteFromFile("/Application/assets/bat_frames.png", 2, 2);
 			AddChild(Sprite);
             
-			FlyAnimation = new Support.AnimationAction(Sprite, 0, 4, 0.3f, looping: true);
+			const float SingleFrame = 1.0f / 60.0f;
+			FlyAnimation = new Support.AnimationAction(Sprite, 9, 11, SingleFrame * 30, looping: true);
+//			FlyAnimation = new Support.AnimationAction(Sprite, 0, 4, 0.3f, looping: true);
             
             CollisionDatas.Add(new EntityCollider.CollisionEntry() {
 	            type = EntityCollider.CollisionEntityType.Enemy,
 				owner = this,
 				collider = Sprite,
-				center = () => GetCollisionCenter(Sprite),
-				radius = () => 16.0f,
+				center = () => GetCollisionCenter(Sprite) + new Vector2( 0, 10 ),
+				radius = () => 20.0f,
 			});
 			
 			Sprite.RunAction(FlyAnimation);
-			Logger.Debug("EnemyTurtle Construct end");
+			this.Scale *= 2;
+			MaximumVelocity = new Vector2( 300, 200 );
+			MinimumVelocity = new Vector2( 30, 30 );
+			
+//			Logger.Debug("EnemyTurtle Construct end");
         }
 
         public override void Tick(float dt)
         {
             Sprite.Visible = false;
-			Game.Instance.SpriteBatch.Register(SpriteBatchType.Bat, this.Position, Sprite.TileIndex2D, Sprite.FlipU);
-
-//	        // reduce gravity
-//			Velocity += Vector2.UnitY * 0.45f;
+			Game.Instance.SpriteBatch.Register(
+				SpriteBatchType.Bat,
+				this.Position,
+				Sprite.TileIndex2D,
+				Sprite.FlipU,
+				Vector2.One * 2
+				);
 			
         	base.Tick(dt);
 			
 			if (InvincibleTime > 0.0f)
 				return;
 				
-//			// 0.0f will just leave the flip state as-is
-//			if (Velocity.X < 0.0f)
-//				Sprite.FlipU = true;
-//			if (Velocity.X > 0.0f)
-//				Sprite.FlipU = false;
-//				
-//			MoveTime -= dt;
-//			MoveDelay -= dt;
-//			
-//			if (FrameCount % 60 == 0)
-//			{
-//				if (DiveTime <= 0.0f)
-//				{
-//					Support.SoundSystem.Instance.PlayNoClobber("bat_fly.wav");
-//				}
-//
-//				if (Game.Instance.Random.Next() % 4 == 0)
-//				{
-//					HoverHeight = 300.0f + Game.Instance.Random.NextSignedFloat() * 10.0f * 10.0f;
-//				}
-//			}
-//				
-//			float velocity_x = FMath.Lerp(Velocity.X, MoveDirection * 4.0f, 0.015f);
-//			float velocity_y = Velocity.Y;
-//			
-//			if (DiveTime > 0.0f)
-//			{
-//				if (DiveTime > 2.0f)
-//				{
-//					velocity_x *= 0.9f;
-//					velocity_y *= 0.9f;
-//					velocity_y += 0.1f;		
-//				}
-//				else if (DiveTime > 1.0f)
-//				{
-//					velocity_y += -0.30f;		
-//				}
-//				else
-//				{
-//					velocity_y += 0.06f;		
-//				}
-//				
-//				DiveTime -= dt;
-//				if (DiveTime <= 0.0f)
-//				{
-//					Sprite.StopAllActions();
-//					Sprite.RunAction(FlyAnimation);
-//				}
-//			}
-//			else
-//			{
-//				if (Position.Y > HoverHeight)
-//					velocity_y += -0.075f;
-//					
-//				if (Position.Y < RiseHeight)
-//					velocity_y += 0.2f;
-//				
-//				velocity_y += 0.075f * FMath.Sin(FrameCount * 0.015f) * FMath.Sin(FrameCount * 0.04f);
-//			}
-//			
-//			Velocity = new Vector2(velocity_x, velocity_y);
-//			
-//			if (MoveDelay <= 0.0f)
-//			{
-//	            Vector2 offset = Game.Instance.Player.LocalToWorld(Vector2.Zero) - LocalToWorld(Vector2.Zero);
-//				MoveDirection = FMath.Sign(offset.X);
-//				
-//				if (Game.Instance.Random.Next() % 3 == 0)
-//				{
-//					DiveTime = 3.0f;
-//					Sprite.StopAllActions();
-//					Sprite.RunAction(PreDiveAnimation);
-//					Sprite.RunAction(PreDiveSequence);
-//				}
-//				
-//				MoveTime = 1.75f + Game.Instance.Random.NextFloat() * 1.25f;
-//				MoveDelay = MoveTime;
-//			}
+			//add gravity
+			Velocity += Vector2.UnitY * -100.0f * dt;
+			
+			//reduce velocity
+//			Velocity *= 0.95f;
+
+			//clamp velocity
+			Velocity = Vector2.Clamp( Velocity, MaximumVelocity * -1, MaximumVelocity );
+			if( GroundPingPongCount>0 ) {
+				if(Velocity.X>=-MinimumVelocity.X && Velocity.X<=MinimumVelocity.X) {
+					Velocity.X = MinimumVelocity.X * (Velocity.X<0 ? -1 : 1);
+				}
+				if(Velocity.Y>=-MinimumVelocity.Y && Velocity.X<=MinimumVelocity.Y) {
+					Velocity.Y = MinimumVelocity.Y * (Velocity.Y<0 ? -1 : 1);
+				}
+			}
+			
+			Position += Velocity * dt;
         }
 		
 		public override void TakeDamage(float damage, Vector2? source)

@@ -46,13 +46,15 @@ namespace kabuto
 		public SpriteBatch SpriteBatch;
 		
 		public DebugString DebugString { get; set; }
+		
+		public EnemySpawner EnemySpawner { get; set; }
 
         public Game()
         {
 //			Director.Instance.DebugFlags |= DebugFlags.Navigate; // press left alt + mouse to navigate in 2d space
 //			Director.Instance.DebugFlags |= DebugFlags.DrawGrid;
-//			Director.Instance.DebugFlags |= DebugFlags.DrawContentWorldBounds;
-//			Director.Instance.DebugFlags |= DebugFlags.DrawContentLocalBounds;
+			Director.Instance.DebugFlags |= DebugFlags.DrawContentWorldBounds;
+			Director.Instance.DebugFlags |= DebugFlags.DrawContentLocalBounds;
 //			Director.Instance.DebugFlags |= DebugFlags.DrawTransform;
 //			Director.Instance.DebugFlags |= DebugFlags.DrawPivot;
 			
@@ -217,49 +219,14 @@ namespace kabuto
 
 		public void StartEnemySpawning()
 		{
-#if false
-			if (EnemySpawnerLoop != null)
-				return;
-
-			Game.Instance.WaveCount = 0;
-
-			Sequence waves = new Sequence();
-			waves.Add(new CallFunc(() => World.AddChild(new EnemyWave(0.0f))));
-			waves.Add(new DelayTime() { Duration = 45.0f });
-			waves.Add(new CallFunc(() => { Game.Instance.WaveCount += 1; }));
-			
-			EnemySpawnerLoop = new RepeatForever() { InnerAction = waves };
-			World.RunAction(EnemySpawnerLoop);
-#else
-			//こうもりを出したい
-			var type = 0;
-			var spawn_rate = 0;
-			var total = 1;
-			var spawner = new EnemySpawner() {
-				SpawnCounter = 0,
-				SpawnRate = spawn_rate,
-				Type = type,
-				Total = total,
-//				Position = new Vector2(-300.0f + Game.Instance.Random.NextFloat() * 1500.0f, 600.0f),
-//				Position = new Vector2(200, 250),
-				Position = new Vector2(50,50),
-			};
-			Logger.Debug("swapned");
-			
+			var spawner = new EnemySpawner();
 			World.AddChild(spawner);
-			Logger.Debug("added child");
-#endif
+			EnemySpawner = spawner;
 		}
 
 		public void StopEnemySpawning()
 		{
-#if false
-			if (EnemySpawnerLoop == null)
-				return;
-
-			World.StopAction(EnemySpawnerLoop);
-			EnemySpawnerLoop = null;
-#endif
+			EnemySpawner = null;
 		}
 
 		public void BuildTextureTileMaps()

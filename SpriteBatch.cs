@@ -8,9 +8,10 @@ using Sce.PlayStation.HighLevel.GameEngine2D.Base;
 
 namespace kabuto
 {
-	public enum SpriteBatchType
+	public enum SpriteBatchType : int
 	{
-		Bat,
+		Bat = 0,
+		Max
 	};
 
 	public class SpriteBatch : Node
@@ -19,44 +20,74 @@ namespace kabuto
 		{
 			public Vector2 position;
 			public Vector2i tile;
+			public Vector2 scale;
 			public bool flip_u;
 		};
+		
+		class TiledSpriteLoadParam {
+			public string filename;
+			public int x;
+			public int y;
+			public TiledSpriteLoadParam(string fn, int _x, int _y) {
+				filename = fn;
+				x = _x;
+				y = _y;
+			}
+		};
+		List<TiledSpriteLoadParam> _TiledSpriteLoadParams = new List<TiledSpriteLoadParam>();
 
 		public List<SpriteTile> Sprites = new List<SpriteTile>();
-		public List<SpriteItem> Bats = new List<SpriteItem>();
+		public List<SpriteItem>[] SpriteItemLists = new List<SpriteItem>[(int)SpriteBatchType.Max];
 
 		public SpriteBatch()
 		{
+			//バッチスプライトが増える場合はこいつに追加
+			_TiledSpriteLoadParams.Add( new TiledSpriteLoadParam("/Application/assets/koumori.png", 3, 4) );
+//			_TiledSpriteLoadParams.Add( new TiledSpriteLoadParam("/Application/assets/bat_frames.png", 2, 2) );
+			
 			PrecacheSprites();
 
 			Sprites.Clear();
-			Sprites.Add(Support.TiledSpriteFromFile("/Application/assets/bat_frames.png", 2, 2));
+			for(int i=0; i<_TiledSpriteLoadParams.Count; i++) {
+				var ps = _TiledSpriteLoadParams[i];
+				Sprites.Add( Support.TiledSpriteFromFile( ps.filename, ps.x, ps.y ) );
+			}
 
 			AdHocDraw += this.DrawBatch;
 		}
 
 		public void PrecacheSprites()
 		{
-			Support.PrecacheTiledSprite("/Application/assets/bat_frames.png", 2, 2);
+			for(int i=0; i<_TiledSpriteLoadParams.Count; i++) {
+				var ps = _TiledSpriteLoadParams[i];
+				Support.PrecacheTiledSprite( ps.filename, ps.x, ps.y );
+			}
 		}
 
-		public void Register(SpriteBatchType type, Vector2 position, Vector2i tile, bool flip_u)
+		public void Register(SpriteBatchType type, Vector2 position, Vector2i tile, bool flip_u) {
+			Register( type, position, tile, flip_u, Vector2.One);
+		}
+		public void Register(SpriteBatchType type, Vector2 position, Vector2i tile, bool flip_u, Vector2 scale)
 		{
-			List<SpriteItem> list = null;
-
-			switch (type)
-			{
-				case SpriteBatchType.Bat: list = Bats; break;
+			if(SpriteItemLists[(int)type]==null) {
+				SpriteItemLists[(int)type] = new List<SpriteItem>();
 			}
-
-			list.Add(new SpriteItem() { position = position, tile = tile, flip_u = flip_u });
+			var list = SpriteItemLists[(int)type];
+			var item = new SpriteItem();
+			item.position = position;
+			item.tile = tile;
+			item.flip_u = flip_u;
+			item.scale = scale;
+			list.Add(item);
 		}
 
 		public void DrawBatch()
 		{
-			DrawList(Bats, Sprites[(int)SpriteBatchType.Bat]);
-			//DrawList(Gauges, Sprites[(int)SpriteBatchType.Gauge]);
-			//DrawList(Panels, Sprites[(int)SpriteBatchType.Panel]);
+			for(int i=0; i<SpriteItemLists.Length; i++) {
+				if(SpriteItemLists[i]!=null) {
+					DrawList(SpriteItemLists[i], Sprites[i]);
+				}
+			}
 		}
 
 		public void DrawList(List<SpriteItem> items, SpriteTile sprite)
@@ -75,6 +106,7 @@ namespace kabuto
 				Director.Instance.SpriteRenderer.FlipU = item.flip_u;
 				Director.Instance.SpriteRenderer.FlipV = sprite.FlipV;
 				TRS copy = sprite.Quad;
+				copy.S *= item.scale;
 				Director.Instance.SpriteRenderer.AddSprite( ref copy, sprite.TileIndex2D );
 			}
 

@@ -1,0 +1,40 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="SpriteBatch.cs">
+    <Files>
+      <File FileName="app.xml" Line="7" Column="30" />
+      <File FileName="AppMain.cs" Line="26" Column="10" />
+      <File FileName="Game.cs" Line="269" Column="37" />
+      <File FileName="GameEntity.cs" Line="10" Column="15" />
+      <File FileName="UI.cs" Line="205" Column="30" />
+      <File FileName="Player.cs" Line="40" Column="67" />
+      <File FileName="Support.cs" Line="108" Column="4" />
+      <File FileName="PlayerInput.cs" Line="43" Column="17" />
+      <File FileName="EntityCollider.cs" Line="23" Column="23" />
+      <File FileName="EnemySpawner.cs" Line="121" Column="26" />
+      <File FileName="EnemyTurtle.cs" Line="27" Column="13" />
+      <File FileName="SpriteBatch.cs" Line="78" Column="1" />
+      <File FileName="PlayerBullet.cs" Line="17" Column="3" />
+      <File FileName="Logger.cs" Line="10" Column="1" />
+      <File FileName="DebugString.cs" Line="182" Column="41" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="kabuto" expanded="True">
+            <Node name="resources" expanded="True" />
+            <Node name="shaders" expanded="True" />
+            <Node name="SpriteBatch.cs" selected="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
