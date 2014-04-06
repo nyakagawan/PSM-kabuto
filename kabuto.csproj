@@ -48,6 +48,7 @@
     <Compile Include="EnemyTurtle.cs" />
     <Compile Include="SpriteBatch.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="PlayerBullet.cs" />
   </ItemGroup>
   <ItemGroup>
     <ShaderProgram Include="shaders\Simple.fcg" />

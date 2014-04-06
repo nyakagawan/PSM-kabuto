@@ -140,8 +140,11 @@ namespace kabuto
 			//Game.Instance.ParticleEffects.AddParticlesCone(16, GetCollisionCenter(BodySprite), Vector2.UnitY, Colors.White, 1.0f);
 			//DropCoinsWithAChanceOfHeart(GetCollisionCenter(BodySprite) + Vector2.UnitY * 160.0f, 4);
 			
-			SetAnimation("Attack");
+//			SetAnimation("Attack");
 			AttackTime = 0.125f;
+			
+			var bullet = new PlayerBullet(Position);
+			Game.Instance.World.AddChild(bullet);
 
 			Support.SoundSystem.Instance.Play("player_sword_attack.wav");
 		}
