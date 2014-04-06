@@ -4,7 +4,7 @@ using Sce.PlayStation.HighLevel.GameEngine2D;
 
 namespace kabuto
 {
-	public class EnemyPiece : GameEntity
+	public class EnemyPiece : EnemyKiller
 	{
 		public float LifeTime { get; set; }
 		public Vector2 TargetPosition { get; set; }

@@ -108,8 +108,8 @@ namespace kabuto
 		{
 			base.CollideFrom(owner, collider);
 			
-			Type type = owner.GetType();
-			if (type == typeof(PlayerBullet) || type == typeof(EnemyPiece))
+			var enemyKiller = owner as EnemyKiller;
+			if (enemyKiller!=null)
 			{
 //				Logger.Debug("[PlayerBullet] Collied from PlayerBullet");
 				CollisionDatas.RemoveAll( (x) => x.owner==this );
@@ -117,18 +117,25 @@ namespace kabuto
 				
 				//spawn pieces
 				{
-					int pieceCount = 4;
+					int nextKillerGen = enemyKiller.Generation + 1;
+					int pieceCount = GlobalParams.EnemyPieceCount;
 					for(int i=0; i<pieceCount; i++) {
 						var pos = Position;
-						var targetPos = pos + Game.Instance.Random.NextVector2( 50 );
+						var targetPos = pos + Game.Instance.Random.NextVector2( GlobalParams.EnemyPieceMoveLength );
 						var enemyPiece = new EnemyPiece(
 							pos,
 							targetPos,
-							0.5f
+							GlobalParams.EnemyPieceLifeTime
 						);
+						enemyPiece.Generation = nextKillerGen;
 						Game.Instance.AddQueue.Add(enemyPiece);
 					}
 				}
+				
+				//add score
+				Game.Instance.ScoreManager.AddScore(2, enemyKiller.Generation);
+
+				Game.Instance.EnemySpawner.EnemyDeadCountTotal ++ ;
 				
 				Game.Instance.RemoveQueue.Add(this);
 			}

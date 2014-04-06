@@ -51,6 +51,8 @@
     <Compile Include="PlayerBullet.cs" />
     <Compile Include="DebugString.cs" />
     <Compile Include="EnemyPiece.cs" />
+    <Compile Include="GlobalParams.cs" />
+    <Compile Include="ScoreManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ShaderProgram Include="shaders\Simple.fcg" />

@@ -41,7 +41,7 @@ namespace kabuto
 		/// </summary>
 		public EnemySpawner() {
 			_SpawnLevelSetting = new List<SpawnLevelSetting> {
-				new SpawnLevelSetting(20, 2.0f, 20),
+				new SpawnLevelSetting(0, 2.0f, 30),
 				new SpawnLevelSetting(20, 2.5f, 20),
 				new SpawnLevelSetting(20, 3.0f, 30),
 				new SpawnLevelSetting( 0, 4.0f, 40),
@@ -91,12 +91,15 @@ namespace kabuto
 
 			if (Game.Instance.PlayerDead)
 				return;
-
-            SpawnCounter += dt;
+			
+			if( SpawnCounter<NextSpawnTime ) {
+	            SpawnCounter += dt;
+			}
+			
 			var displayEnemyCount = Total - EnemyDeadCountTotal;
 			var curSpawnSetting = _SpawnLevelSetting[CurrentLevel-1];
             if(	NextSpawnTime>0
-			&&	SpawnCounter > NextSpawnTime
+			&&	SpawnCounter>=NextSpawnTime
 			&&	displayEnemyCount < curSpawnSetting.DisplayLimitCount
 			){
 				SpawnCounter = 0;

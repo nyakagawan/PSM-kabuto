@@ -110,4 +110,12 @@ namespace kabuto
 			Game.Instance.World.RemoveChild(this, true);
 		}
 	};
+	
+	/// <summary>
+	/// PlayerBulletやEenmeyPieceといった、Enemyを殺すオブジェクトの基底クラス
+	/// </summary>
+	public class EnemyKiller : GameEntity
+	{
+		public int Generation { get; set; }
+	}
 }

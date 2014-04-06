@@ -1,8 +1,5 @@
-
 using System.Collections.Generic;
-
 using Sce.PlayStation.Core;
-
 using Sce.PlayStation.HighLevel.GameEngine2D;
 
 namespace kabuto

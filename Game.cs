@@ -36,18 +36,14 @@ namespace kabuto
 		public Vector2 TitleCameraCenter { get; set; }
 		public Vector2 CameraTarget { get; set; }
 		
-		public int WaveCount { get; set; }
 		public bool PlayerDead { get; set; }
 		public Vector2 ScreenSize { get { return new Vector2(960.0f, 544.0f); } }
 		
-		public Sce.PlayStation.HighLevel.GameEngine2D.SpriteTile LightShafts { get; set; }
-		public Sce.PlayStation.HighLevel.GameEngine2D.ActionBase EnemySpawnerLoop { get; set; }
-		
 		public SpriteBatch SpriteBatch;
-		
 		public DebugString DebugString { get; set; }
 		
 		public EnemySpawner EnemySpawner { get; set; }
+		public ScoreManager ScoreManager { get; set; }
 
         public Game()
         {
@@ -71,6 +67,7 @@ namespace kabuto
             ParticleEffects = new Support.ParticleEffectsManager();
             TextureTileMaps = new Support.TextureTileMapManager();
             UI = new UI();
+			ScoreManager = new ScoreManager();
 
 			SpriteBatch = new SpriteBatch();
 
@@ -85,7 +82,7 @@ namespace kabuto
             Scene.AddChild(Foreground);
             Scene.AddChild(Interface);
             Scene.AddChild(Curtains);
-            
+			
 			Scene.Camera.SetViewFromViewport();
 			
 			// temporary: munge viewport to match vita + assets
@@ -256,7 +253,7 @@ namespace kabuto
 		{
 			if(DebugString!=null) {
 				DebugString.Clear();
-				DebugString.WriteLine("test draw");
+				DebugString.WriteLine("Score:{0:D8}, Combo:{0:D3}", ScoreManager.GameScore, ScoreManager.HiCombo);
 			}
 		}
         

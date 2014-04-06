@@ -5,7 +5,7 @@ using Sce.PlayStation.HighLevel.GameEngine2D;
 
 namespace kabuto
 {
-	public class PlayerBullet : GameEntity
+	public class PlayerBullet : EnemyKiller
 	{
 		public Vector2 Velocity = Vector2.Zero;
 		
@@ -33,6 +33,7 @@ namespace kabuto
 			
 			Position = spawnPos;
 			Scale *= 2.0f;
+			Generation = 0;
 			
 			this.Velocity = Vector2.UnitY * 320;
 		}
