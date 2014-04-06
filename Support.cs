@@ -156,6 +156,8 @@ namespace kabuto
 		
 		public class AnimationAction : Sce.PlayStation.HighLevel.GameEngine2D.ActionBase
 		{
+			public delegate void AnimFinishDelegate();
+			
 			int animation_start;
 			int animation_end;
 			Sce.PlayStation.HighLevel.GameEngine2D.SpriteTile attached_sprite;
@@ -163,16 +165,34 @@ namespace kabuto
 			float frame_time;
 			float speed;
 			bool looping;
+			AnimFinishDelegate animFinishCallback;
 			
 			public AnimationAction(Sce.PlayStation.HighLevel.GameEngine2D.SpriteTile sprite, float seconds)
-				: this(sprite, 0, sprite.TextureInfo.NumTiles.X * sprite.TextureInfo.NumTiles.Y, seconds)
+				: this(sprite, 0, sprite.TextureInfo.NumTiles.X * sprite.TextureInfo.NumTiles.Y, seconds, false, null)
 			{
 			}
 			
-			public AnimationAction(Sce.PlayStation.HighLevel.GameEngine2D.SpriteTile sprite, int a, int b, float seconds, bool looping = false)
-			{
+//			public AnimationAction(Sce.PlayStation.HighLevel.GameEngine2D.SpriteTile sprite, float seconds, AnimFinishDelegate finishCallback)
+//				: this(sprite, 0, sprite.TextureInfo.NumTiles.X * sprite.TextureInfo.NumTiles.Y, seconds, false, finishCallback)
+//			{
+//			}
+//			
+//			public AnimationAction(Sce.PlayStation.HighLevel.GameEngine2D.SpriteTile sprite, int a, int b, float seconds, bool looping)
+//				: this(sprite, 0, sprite.TextureInfo.NumTiles.X * sprite.TextureInfo.NumTiles.Y, seconds, looping, null)
+//			{
+//			}
+
+			public AnimationAction(
+				Sce.PlayStation.HighLevel.GameEngine2D.SpriteTile sprite,
+				int a,
+				int b,
+				float seconds,
+				bool looping=false,
+				AnimFinishDelegate finishCallback=null
+			){
 				this.looping = looping;
 				speed = 1.0f;
+				animFinishCallback = finishCallback;
 				
 				attached_sprite = sprite;
 				
@@ -213,6 +233,9 @@ namespace kabuto
 				if (!looping && tile_index == animation_end - 1)
 				{
 					Stop();
+					if(animFinishCallback!=null) {
+						animFinishCallback();
+					}
 				}
 			}
 			

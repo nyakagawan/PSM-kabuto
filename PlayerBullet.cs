@@ -12,8 +12,7 @@ namespace kabuto
         public Sce.PlayStation.HighLevel.GameEngine2D.SpriteTile BodySprite { get; set; }
         public string CurrentAnimation { get; set; }
         public Dictionary<string, Support.AnimationAction> AnimationTable { get; set; }
-        public float Radius { get { return 32.0f; } }
-		
+        public float Radius { get { return 25.0f; } }
 
 		public PlayerBullet (Vector2 spawnPos)
 		{
@@ -22,7 +21,7 @@ namespace kabuto
             this.AddChild(BodySprite);
             
             CollisionDatas.Add(new EntityCollider.CollisionEntry() {
-	            type = EntityCollider.CollisionEntityType.Player,
+	            type = EntityCollider.CollisionEntityType.Bullet,
 				owner = this,
 				collider = BodySprite,
 				center = () => GetCollisionCenter(BodySprite),
@@ -32,6 +31,7 @@ namespace kabuto
 			const float SingleFrame = 1.0f / 60.0f;
 			AnimationTable = new Dictionary<string, Support.AnimationAction>() {
 				{ "Idle", new Support.AnimationAction(BodySprite, 0, 3, SingleFrame * 30, looping: true) },
+				{ "Explosion", new Support.AnimationAction(BodySprite, 4, 7, SingleFrame * 30, finishCallback:ExplosionAnimFinishCallback) },
 			};
 			
 			SetAnimation("Idle");
@@ -39,7 +39,7 @@ namespace kabuto
 			Position = spawnPos;
 			Scale *= 2.0f;
 			
-			this.Velocity = Vector2.UnitY * 160;
+			this.Velocity = Vector2.UnitY * 320;
 		}
 		
 		public override void CollideTo(GameEntity owner, Node collider)
@@ -50,7 +50,14 @@ namespace kabuto
 			if (type == typeof(EnemyTurtle))
 			{
 				Logger.Debug("[PlayerBullet] Collied to Enemy");
+				CollisionDatas.RemoveAll( (x) => x.owner==this );
+				Velocity *= 0.3f;
+				SetAnimation("Explosion");
 			}
+		}
+		
+		void ExplosionAnimFinishCallback() {
+			Game.Instance.RemoveQueue.Add(this);
 		}
 		
 		public override void Tick(float dt)

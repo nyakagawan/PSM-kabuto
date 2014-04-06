@@ -58,10 +58,14 @@ namespace kabuto
 						Game.Instance.Collider.Add(c);
 				}
 			}
-		} 
+		}
 		
-		public virtual void CollideTo(GameEntity owner, Node collider) { }
-		public virtual void CollideFrom(GameEntity owner, Node collider) { }
+		public virtual void CollideTo(GameEntity owner, Node collider) {
+//			Logger.Debug("CollideTo");
+		}
+		public virtual void CollideFrom(GameEntity owner, Node collider) {
+//			Logger.Debug("CollideFrom");
+		}
 		
 		public void SpawnDamageParticles(Vector2 position, Vector2 source, float damage, Vector4 color)
 		{				

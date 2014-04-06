@@ -55,7 +55,40 @@ namespace kabuto
 		
 		public void Collide()
 		{
+			//enemy x [ bullet ]
+			Collide(
+				CollisionEntityType.Bullet,
+				new CollisionEntityType[] {
+					CollisionEntityType.Enemy
+				}
+			);
+			
 			Clear();
+		}
+		
+		void Collide( CollisionEntityType toType, CollisionEntityType[] fromTypes ) {
+			foreach(var a in typed_entries[(int)toType]) {
+				var a_center = a.center();
+				var a_rad = a.radius();
+				
+				for(int i=0; i<fromTypes.Length; i++) {
+					foreach(var b in typed_entries[(int)fromTypes[i]]) {
+						if( a.owner==b.owner ) {
+							continue;
+						}
+						float r = a_rad + b.radius();
+						
+						Vector2 offset = b.center() - a_center;
+						float lensqr = offset.LengthSquared();
+						
+						if (lensqr < r * r)
+						{
+							a.owner.CollideTo(b.owner, b.collider);
+							b.owner.CollideFrom(a.owner, a.collider);
+						}
+					}
+				}
+			}
 		}
 		
 		public void Clear()

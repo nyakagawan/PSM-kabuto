@@ -18,6 +18,7 @@ namespace kabuto
         public float AttackTime { get; set; }
 		public float Health { get; set; }
 		public int FootstepDelay { get; set; }
+		public float Redius { get { return 32.0f; } }
 
         public Sce.PlayStation.HighLevel.GameEngine2D.SpriteTile BodySprite { get; set; }
         public string CurrentAnimation { get; set; }
@@ -33,7 +34,7 @@ namespace kabuto
 				owner = this,
 				collider = BodySprite,
 				center = () => GetCollisionCenter(BodySprite),
-				radius = () => 14.0f,
+				radius = () => Redius,
 			});
 			
 			const float SingleFrame = 1.0f / 60.0f;
@@ -97,7 +98,7 @@ namespace kabuto
             Position += Velocity;
             
             Position = new Vector2(
-				FMath.Clamp(Position.X, 0, Game.Instance.ScreenSize.X),
+				FMath.Clamp(Position.X, 0, Game.Instance.ScreenSize.X - Redius*2),
 				FMath.Clamp(Position.Y, 0, Game.Instance.ScreenSize.Y)
 			);
             
