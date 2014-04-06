@@ -97,8 +97,8 @@ namespace kabuto
 			Interface.AddChild(UI);
 		
             // world
-            var bg_forest = Support.SpriteFromFile("/Application/assets/background_test.png");
-			bg_forest.Scale *= 2;
+            var bg_forest = Support.SpriteFromFile("/Application/assets/background_test2.png");
+			bg_forest.Scale *= 1;
 
             bg_forest.Position = new Vector2(0f, 0.0f);
 			
@@ -123,42 +123,14 @@ namespace kabuto
 			
 			//LightShafts.Color.A = FMath.Sin(Game.Instance.UI.FrameCount * 0.01f) * 0.15f;
 			
-			if (PlayerInput.AnyButton())
+//			if (PlayerInput.AnyButton())
 			{
 	            Player = new Player();
 	            World.AddChild(Player);
 				World.AddChild(SpriteBatch);
 	            
-	            // proper enemies
-	            /*
-	            if (false)
-				{
-		            World.AddChild(new EnemySpawner() { Position = new Vector2(-10.0f, FloorHeight), SpawnRate = 3.0f, SpawnCounter = 3.0f, Type = 0, Total = -1, });
-		            World.AddChild(new EnemySpawner() { Position = new Vector2(970.0f, FloorHeight), SpawnRate = 4.0f, SpawnCounter = 4.0f, Type = 0, Total = -1, });
-		            World.AddChild(new EnemySpawner() { Position = new Vector2(120.0f, 460.0f), SpawnRate = 8.0f, SpawnCounter = 5.0f, Type = 1, Total = -1, });
-		            World.AddChild(new EnemySpawner() { Position = new Vector2(310.0f, 460.0f), SpawnRate = 20.0f, SpawnCounter = 20.0f, Type = 2, Total = -1, });
-		            World.AddChild(new EnemySpawner() { Position = new Vector2(960.0f, 460.0f), SpawnRate = 40.0f, SpawnCounter = 22.0f, Type = 2, Total = -1, });
-		            World.AddChild(new EnemySpawner() { Position = new Vector2(-10.0f, 460.0f), SpawnRate = 40.0f, SpawnCounter = 14.0f, Type = 2, Total = -1, });
-				}
-				*/
-	            
-				// test enemies
-				/*
-				if (false)
-				{
-		            World.AddChild(new EnemySpawner() { Position = new Vector2(200.0f, FloorHeight), SpawnRate = 6.0f, SpawnCounter = 6.0f, Type = 3, Total = -1 });
-		            //World.AddChild(new EnemySpawner() { Position = new Vector2(200.0f, FloorHeight), SpawnRate = 3.0f, SpawnCounter = 6.0f, Type = 3, Total = -1 });
-				}
-				*/
-				
-	            // test high enemy count
-				//for (int i = 0; i < 300; ++i)
-					//World.AddChild(new EnemySlime() { Position = new Vector2(200.0f + i, 150.0f + (i % 30)) });
-					
 				Sce.PlayStation.HighLevel.GameEngine2D.Scheduler.Instance.Unschedule(Scene, this.TickTitle);
 				Sce.PlayStation.HighLevel.GameEngine2D.Scheduler.Instance.Schedule(Scene, this.TickGame, 0.0f, false);
-
-//				Support.SoundSystem.Instance.Play("game_press_start.wav");
 
 				UI.GameMode();
 

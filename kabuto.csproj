@@ -132,6 +132,7 @@
     <Content Include="assets\obake.png" />
     <Content Include="assets\obake_kage.png" />
     <Content Include="assets\bomb.png" />
+    <Content Include="assets\background_test2.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\Thumbs.db" />
