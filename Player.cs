@@ -12,6 +12,7 @@ namespace kabuto
 	public class Player : GameEntity
     {
         public const float IdleAnimationSpeedThreshold = 1.25f;
+		public const float MaximumWalkVelocity = 10.0f;
 		
 		public Vector2 Velocity = Vector2.Zero;
         public float AttackTime { get; set; }
@@ -49,14 +50,8 @@ namespace kabuto
 			SetAnimation("Idle");
         }
 		
-		public void TickTransform(float dt)
-		{
-		}
-		
        	public override void Tick(float dt)
         {
-			TickTransform(dt);
-			
         	base.Tick(dt);
             
             if (InvincibleTime <= 0.0f)
@@ -95,6 +90,8 @@ namespace kabuto
 					Velocity = Velocity * (0.2f*dt);
 				}
             }
+			
+			Velocity.X = FMath.Clamp(Velocity.X, -MaximumWalkVelocity, MaximumWalkVelocity);
 
 			// Transform
             Position += Velocity;
@@ -124,6 +121,11 @@ namespace kabuto
             
 			// walk animation speed based on velocity
 			AnimationTable["Walk"].SetSpeed(System.Math.Abs(Velocity.X));
+		}
+		
+		public override void DebugDraw() {
+			base.DebugDraw();
+			Game.Instance.DebugString.WriteLine("PL Vel: "+Velocity.ToString());
 		}
 		
 		public void SetAnimation(string animation)

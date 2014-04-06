@@ -178,6 +178,10 @@ namespace kabuto
 			stringBuilder.Append("\n");
 		}
 		
+		public void WriteLine(string format, params object[] ps) {
+			WriteLine(string.Format(format, ps));
+		}
+		
 		
 		/// <summary>デバッグフォントの描画。</summary>
 		public void Render()

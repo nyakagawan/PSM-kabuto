@@ -25,11 +25,11 @@ namespace kabuto
 		public GameEntity()
 		{
 			Sce.PlayStation.HighLevel.GameEngine2D.Scheduler.Instance.Schedule(this, Tick, 0.0f, false);
-			//AdHocDraw += this.DebugDraw;
+			AdHocDraw += this.DebugDraw;
 			CollisionDatas = new List<EntityCollider.CollisionEntry>();
 		}
 		
-		public void DebugDraw()
+		public virtual void DebugDraw()
 		{
 			foreach (EntityCollider.CollisionEntry c in CollisionDatas)
 			{
