@@ -44,6 +44,8 @@ namespace kabuto
 			Position = new Vector2(200.0f, 200.0f);
 			AttackTime = -1.0f;
 			Health = 5.0f;
+			
+			SetAnimation("Idle");
         }
 		
 		public void TickTransform(float dt)
