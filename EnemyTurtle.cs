@@ -109,22 +109,22 @@ namespace kabuto
 			base.CollideFrom(owner, collider);
 			
 			Type type = owner.GetType();
-			if (type == typeof(PlayerBullet))
+			if (type == typeof(PlayerBullet) || type == typeof(EnemyPiece))
 			{
-				Logger.Debug("[PlayerBullet] Collied from PlayerBullet");
+//				Logger.Debug("[PlayerBullet] Collied from PlayerBullet");
 				CollisionDatas.RemoveAll( (x) => x.owner==this );
 				Velocity *= 0.0f;
 				
 				//spawn pieces
 				{
-					int pieceCount = 3;
+					int pieceCount = 4;
 					for(int i=0; i<pieceCount; i++) {
 						var pos = Position;
 						var targetPos = pos + Game.Instance.Random.NextVector2( 50 );
 						var enemyPiece = new EnemyPiece(
 							pos,
 							targetPos,
-							1.0f
+							0.5f
 						);
 						Game.Instance.AddQueue.Add(enemyPiece);
 					}

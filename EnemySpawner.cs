@@ -41,7 +41,7 @@ namespace kabuto
 		/// </summary>
 		public EnemySpawner() {
 			_SpawnLevelSetting = new List<SpawnLevelSetting> {
-				new SpawnLevelSetting(20, 2.0f, 10),
+				new SpawnLevelSetting(20, 2.0f, 20),
 				new SpawnLevelSetting(20, 2.5f, 20),
 				new SpawnLevelSetting(20, 3.0f, 30),
 				new SpawnLevelSetting( 0, 4.0f, 40),

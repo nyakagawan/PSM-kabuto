@@ -13,6 +13,7 @@ namespace kabuto
 		{
 			Player,
 			Enemy,
+			EnemyPiece,
 			Bullet,
 			Item,
 			Max
@@ -55,9 +56,16 @@ namespace kabuto
 		
 		public void Collide()
 		{
-			//enemy x [ bullet ]
+			//Bullet to ...
 			Collide(
 				CollisionEntityType.Bullet,
+				new CollisionEntityType[] {
+					CollisionEntityType.Enemy
+				}
+			);
+			//EnemyPiece to ...
+			Collide(
+				CollisionEntityType.EnemyPiece,
 				new CollisionEntityType[] {
 					CollisionEntityType.Enemy
 				}
