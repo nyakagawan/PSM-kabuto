@@ -115,11 +115,23 @@
     <Content Include="assets\sounds\zombie_shuffle.wav" />
     <Content Include="assets\sounds\zombie_take_damage.wav" />
     <Content Include="assets\balloon.png" />
+    <Content Include="assets\dekakabocha.png" />
+    <Content Include="assets\dekakabocha_kage.png" />
+    <Content Include="assets\hone.png" />
+    <Content Include="assets\kabocha.png" />
+    <Content Include="assets\kabocha_kage.png" />
+    <Content Include="assets\koumori.png" />
+    <Content Include="assets\koumori_kage.png" />
+    <Content Include="assets\majo.png" />
+    <Content Include="assets\majo_kage.png" />
+    <Content Include="assets\obake.png" />
+    <Content Include="assets\obake_kage.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\Thumbs.db" />
     <None Include="assets\fonts\IndieFlower.ttf" />
     <None Include="assets\fonts\MedievalSharp.ttf" />
     <None Include="assets\fonts\TheGirlNextDoor.ttf" />
+    <None Include="assets\readme.txt" />
   </ItemGroup>
 </Project>

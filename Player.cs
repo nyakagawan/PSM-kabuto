@@ -24,7 +24,7 @@ namespace kabuto
 		
         public Player()
         {
-            BodySprite = Support.TiledSpriteFromFile("/Application/assets/bat_frames.png", 2, 2);
+            BodySprite = Support.TiledSpriteFromFile("/Application/assets/majo.png", 3, 4);
             this.AddChild(BodySprite);
             
             CollisionDatas.Add(new EntityCollider.CollisionEntry() {
@@ -37,11 +37,12 @@ namespace kabuto
 			
 			const float SingleFrame = 1.0f / 60.0f;
 			AnimationTable = new Dictionary<string, Support.AnimationAction>() {
-				{ "Idle", new Support.AnimationAction(BodySprite, 0, 4, SingleFrame * 30, looping: true) },
-				{ "Walk", new Support.AnimationAction(BodySprite, 0, 4, SingleFrame * 60, looping: true) },
+				{ "Idle",	new Support.AnimationAction(BodySprite, 9, 11, SingleFrame * 30, looping: true) },
+				{ "Walk",	new Support.AnimationAction(BodySprite, 3, 5, SingleFrame * 60, looping: true) },
 			};
 			
-			Position = new Vector2(200.0f, 200.0f);
+			Position = new Vector2( Game.Instance.ScreenSize.X * 0.5f, 60.0f);
+			Scale *= 2;
 			AttackTime = -1.0f;
 			Health = 5.0f;
 			
@@ -50,17 +51,6 @@ namespace kabuto
 		
 		public void TickTransform(float dt)
 		{
-            Position += Velocity;
-            
-            Position = new Vector2(
-				FMath.Clamp(Position.X, -260.0f, 1030.0f),
-				FMath.Max(Position.Y, Game.Instance.FloorHeight)
-			);
-            Position = new Vector2(Position.X, FMath.Max(Position.Y, Game.Instance.FloorHeight));
-            
-			// cleanup infinitesmal float values
-			if (System.Math.Abs(Velocity.X) < 0.0001f)
-				Velocity = new Vector2(0.0f, Velocity.Y);
 		}
 		
        	public override void Tick(float dt)
@@ -77,8 +67,15 @@ namespace kabuto
 
 				if (System.Math.Abs(Velocity.X) > IdleAnimationSpeedThreshold)
 				{
-					if (CurrentAnimation == "Idle")
+					if (CurrentAnimation == "Idle") {
 						SetAnimation("Walk");
+						if( Velocity.X<0 ) {
+							BodySprite.FlipU = true;
+						}
+						else {
+							BodySprite.FlipU = false;
+						}
+					}
 
 					if (FootstepDelay <= 0)
 					{
@@ -89,8 +86,9 @@ namespace kabuto
 				}
 				else
 				{
-					if (CurrentAnimation == "Walk")
+					if (CurrentAnimation.StartsWith("Walk")) {
 						SetAnimation("Idle");
+					}
 				}
 				
 				if(axis==0) {
@@ -98,6 +96,18 @@ namespace kabuto
 				}
             }
 
+			// Transform
+            Position += Velocity;
+            
+            Position = new Vector2(
+				FMath.Clamp(Position.X, 0, Game.Instance.ScreenSize.X),
+				FMath.Clamp(Position.Y, 0, Game.Instance.ScreenSize.Y)
+			);
+            
+			// cleanup infinitesmal float values
+			if (System.Math.Abs(Velocity.X) < 0.001f)
+				Velocity = new Vector2(0.0f, Velocity.Y);
+			
             // Attacks
             if (AttackTime < 0.0f)
 			{

@@ -95,17 +95,12 @@ namespace kabuto
 			Interface.AddChild(UI);
 		
             // world
-            var bg_forest = Support.SpriteFromFile("/Application/assets/background_back.png");
-            var fg_log = Support.SpriteFromFile("/Application/assets/background_front.png");
+            var bg_forest = Support.SpriteFromFile("/Application/assets/background_test.png");
+			bg_forest.Scale *= 2;
 
-            bg_forest.Position = new Vector2(-160.0f, 0.0f);
-			fg_log.Position = new Vector2(-160.0f, 0.0f);
-			
-			bg_forest.Pivot = new Vector2(bg_forest.TextureInfo.TextureSizef.X * 0.5f, 0.0f);
-            fg_log.Pivot = new Vector2(fg_log.TextureInfo.TextureSizef.X * 0.5f, 0.0f);
+            bg_forest.Position = new Vector2(0f, 0.0f);
 			
             Background.AddChild(bg_forest);
-            Foreground.AddChild(fg_log);
 			
 			UI.TitleMode();
 			
